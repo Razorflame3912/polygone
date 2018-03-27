@@ -162,9 +162,9 @@ void add_sphere( struct matrix * edges,
 		    points->m[0][index],
 		    points->m[1][index],
 		    points->m[2][index],
-		    points->m[0][index+1],
-		    points->m[1][index+1],
-		    points->m[2][index+1],
+		    points->m[0][(index+1)%(points->lastcol)],
+		    points->m[1][(index+1)%(points->lastcol)],
+		    points->m[2][(index+1)%(points->lastcol)],
 		    points->m[0][(index+step)%(points->lastcol)],
 		    points->m[1][(index+step)%(points->lastcol)],
 		    points->m[2][(index+step)%(points->lastcol)]
@@ -265,12 +265,32 @@ void add_torus( struct matrix * edges,
     for ( longt = longStart; longt < longStop; longt++ ) {
 
       index = lat * step + longt;
-      add_edge( edges, points->m[0][index],
-                points->m[1][index],
-                points->m[2][index],
-                points->m[0][index] + 1,
-                points->m[1][index] + 1,
-                points->m[2][index] + 1);
+
+      	add_polygon(edges,
+		    points->m[0][index],
+		    points->m[1][index],
+		    points->m[2][index],
+		    points->m[0][(index+1)%(points->lastcol)],
+		    points->m[1][(index+1)%(points->lastcol)],
+		    points->m[2][(index+1)%(points->lastcol)],
+		    points->m[0][(index+step)%(points->lastcol)],
+		    points->m[1][(index+step)%(points->lastcol)],
+		    points->m[2][(index+step)%(points->lastcol)]
+		  );
+	
+	if(index%step!=0){
+	  add_polygon(edges,
+		      points->m[0][index],
+		      points->m[1][index],
+		      points->m[2][index],
+		      points->m[0][(index+step)%(points->lastcol)],
+		      points->m[1][(index+step)%(points->lastcol)],
+		      points->m[2][(index+step)%(points->lastcol)],
+		      points->m[0][(index+step-1)%(points->lastcol)],
+		      points->m[1][(index+step-1)%(points->lastcol)],
+		      points->m[2][(index+step-1)%(points->lastcol)]
+		      );
+	}
     }
   }
   free_matrix(points);
