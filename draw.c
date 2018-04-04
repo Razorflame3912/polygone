@@ -45,24 +45,62 @@ void add_polygon( struct matrix *polygons,
   ====================*/
 void draw_polygons( struct matrix *polygons, screen s, color c ) {
   int i;
+  double p0x,p0y,p0z,p1x,p1y,p1z,p2x,p2y,p2z,ax,ay,az,bx,by,bz,nx,ny,nz,vx,vy,vz,px,py,pz;
   for(i=0;i<(polygons->lastcol)-2;i+=3){
-    draw_line( polygons->m[0][i],
-               polygons->m[1][i],
-               polygons->m[0][i+1],
-               polygons->m[1][i+1],
-               s, c);
-    draw_line( polygons->m[0][i+1],
-               polygons->m[1][i+1],
-               polygons->m[0][i+2],
-               polygons->m[1][i+2],
-               s, c);
-    draw_line( polygons->m[0][i+2],
-               polygons->m[1][i+2],
-               polygons->m[0][i],
-               polygons->m[1][i],
-               s, c);
-  }
-  
+    p0x = polygons->m[0][i];
+    p0y = polygons->m[1][i];
+    p0z = polygons->m[2][i];
+    
+    p1x = polygons->m[0][i+1];
+    p1y = polygons->m[1][i+1];
+    p1z = polygons->m[2][i+1];
+    
+    p2x = polygons->m[0][i+2];
+    p2y = polygons->m[1][i+2];
+    p2z = polygons->m[2][i+2];
+
+    ax = p1x - p0x; 
+    ay = p1y - p0y; 
+    az = p1z - p0z; 
+
+    bx = p2x - p0x; 
+    by = p2y - p0y; 
+    bz = p2z - p0z;
+
+    nx=(ay*bz)-(az*by);
+    ny=(az*bx)-(ax*bz);
+    nz=(ax*by)-(ay*bx);
+
+    vx = 0;
+    vy = 0;
+    vz = 1;
+
+    px = nx*vx;
+    py = ny*vy;
+    pz = nz*vz;
+
+    if(pz>0){
+
+    
+     
+    
+      draw_line( polygons->m[0][i],
+		 polygons->m[1][i],
+		 polygons->m[0][i+1],
+		 polygons->m[1][i+1],
+		 s, c);
+      draw_line( polygons->m[0][i+1],
+		 polygons->m[1][i+1],
+		 polygons->m[0][i+2],
+		 polygons->m[1][i+2],
+		 s, c);
+      draw_line( polygons->m[0][i+2],
+		 polygons->m[1][i+2],
+		 polygons->m[0][i],
+		 polygons->m[1][i],
+		 s, c);
+    }
+  }  
 }
 
 
@@ -98,15 +136,15 @@ void add_box( struct matrix * edges,
   add_polygon(edges, x1, y0, z0, x0, y0, z0, x1, y1, z0);
 
   //back
-  add_polygon(edges, x0, y0, z1, x0, y1, z1, x1, y1, z1);
-  add_polygon(edges, x1, y0, z1, x0, y0, z1, x1, y1, z1);
+  add_polygon(edges, x0, y0, z1, x1, y1, z1, x0, y1, z1);
+  add_polygon(edges, x1, y0, z1, x1, y1, z1, x0, y0, z1);
 
   //side1
   add_polygon(edges, x0, y0, z0, x0, y1, z1, x0, y1, z0);
-  add_polygon(edges, x0, y0, z0, x0, y1, z1, x0, y0, z1);
+  add_polygon(edges, x0, y0, z0, x0, y0, z1, x0, y1, z1);
 
   //side2
-  add_polygon(edges, x1, y0, z0, x1, y1, z1, x1, y1, z0);
+  add_polygon(edges, x1, y0, z0, x1, y1, z0, x1, y1, z1);
   add_polygon(edges, x1, y0, z0, x1, y1, z1, x1, y0, z1);
 
   //top
@@ -114,8 +152,8 @@ void add_box( struct matrix * edges,
   add_polygon(edges, x0, y0, z1, x1, y0, z0, x1, y0, z1);
 
   //bottom
-  add_polygon(edges, x0, y1, z1, x0, y1, z0, x1, y1, z0);
-  add_polygon(edges, x0, y1, z1, x1, y1, z0, x1, y1, z1);
+  add_polygon(edges, x0, y1, z1, x1, y1, z0, x0, y1, z0);
+  add_polygon(edges, x0, y1, z1, x1, y1, z1, x1, y1, z0);
 }
 
 
